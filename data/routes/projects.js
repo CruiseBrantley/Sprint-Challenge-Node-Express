@@ -1,8 +1,8 @@
-const express = require('express');
-const db = require('../helpers/projectModel.js');
+const express = require("express");
+const db = require("../helpers/projectModel.js");
 const router = express.Router();
 
-router.post('/', (req, res, next) => {
+router.post("/", (req, res, next) => {
   const projectInformation = req.body;
   db
     .insert(projectInformation)
@@ -10,43 +10,38 @@ router.post('/', (req, res, next) => {
       res.status(201).json(response);
     })
     .catch(err => {
-      res.status(400).send({ Error: 'must be a unique value' });
+      res.status(400).send({ Error: "must be a unique value" });
     });
 });
 
-
-router.delete('/', function (req, res) {
-  const { id } = req.query;
-  let project;
+router.delete("/:id", function(req, res) {
+  const { id } = req.params;
   db
-    .get(id)
-    .then(foundProject => {
-      project = { ...foundProject[0] };
-
-      db.remove(id).then(response => {
-        res.status(200).json(project);
-      });
+    .remove(id)
+    .then(response => {
+      if (response !== 0) res.json("successfully deleted");
+      else res.json("could not be deleted");
     })
     .catch(err => {
       res.status(500).json({ erro: err });
     });
 });
 
-router.put('/:id', function (req, res) {
+router.put("/:id", function(req, res) {
   const { id } = req.params;
   const update = req.body;
 
   db
     .update(id, update)
     .then(response => {
-      if (response !== null) res.json('successfully updated')
+      if (response !== null) res.json("successfully updated");
     })
     .catch(err => {
       res.status(500).json(err);
     });
 });
 
-router.get('/', (req, res) => {
+router.get("/", (req, res) => {
   db
     .get()
     .then(projects => {
@@ -57,13 +52,13 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get("/:id", (req, res) => {
   const id = req.params.id;
   db
     .get(id)
     .then(projects => {
       if (projects === undefined) {
-        res.status(404).json({ message: 'project not found' });
+        res.status(404).json({ message: "project not found" });
       } else {
         res.json(projects);
       }

@@ -8,7 +8,7 @@ const server = express();
 server.use(express.json());
 
 server.use("/api/projects", projects);
-//server.use('/api/actions', actions);
+server.use("/api/actions", actions);
 
 server.get("/", (req, res) => {
   res.json({ api: "The server works." });
