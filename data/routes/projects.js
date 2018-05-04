@@ -20,7 +20,7 @@ router.delete("/:id", function(req, res) {
     .remove(id)
     .then(response => {
       if (response !== 0) res.json("successfully deleted");
-      else res.json("could not be deleted");
+      else res.status(400).json("could not find " + id);
     })
     .catch(err => {
       res.status(500).json({ erro: err });
@@ -57,7 +57,7 @@ router.get("/:id/actions", (req, res) => {
   db
     .getProjectActions(id)
     .then(projects => {
-      if (projects === null) {
+      if (projects.length === 0) {
         res.status(404).json({ message: "project actions not found" });
       } else {
         res.json(projects);
