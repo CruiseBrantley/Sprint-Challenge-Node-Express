@@ -52,6 +52,22 @@ router.get("/", (req, res) => {
     });
 });
 
+router.get("/:id/actions", (req, res) => {
+  const id = req.params.id;
+  db
+    .getProjectActions(id)
+    .then(projects => {
+      if (projects === null) {
+        res.status(404).json({ message: "project actions not found" });
+      } else {
+        res.json(projects);
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+});
+
 router.get("/:id", (req, res) => {
   const id = req.params.id;
   db
